@@ -18,8 +18,20 @@ const FormInput = () => {
             mess = `Vui lòng nhập ${id}`;
         } else if (tooShort) {
             mess = `Vui lòng nhập tối thiểu ${minLength} ký tự`;
-        } else if(patternMismatch){
-            mess = `Vui lòng nhập đúng định dạng ${id}`
+        }
+        // else if (patternMismatch) {
+        //     if (id === "name") {
+        //         // Kiểm tra chữ tiếng Việt không có số
+        //         const vietnamesePattern = "/\b[^\d\s]*\p{Script=Vietnamese}+[^\d\s]*\b/gu";
+        //         if (!vietnamesePattern.test(value)) {
+        //             mess = "Vui lòng nhập chữ tiếng Việt không có số";
+        //         }
+        //     } else {
+        //         mess = `Vui lòng nhập đúng định dạng ${id}`;
+        //     }
+        // }
+        else if (patternMismatch) {
+            mess = `Vui lòng nhập đúng định dạng ${id}`;
         }
 
         console.log("validity: ", validity);
@@ -83,8 +95,7 @@ const FormInput = () => {
                     </label>
                     <input
                         required
-                        
-                        minLength={5}
+                        pattern="[\p{L} ]+"
                         type="text"
                         className="form-control"
                         id="name"
@@ -102,7 +113,8 @@ const FormInput = () => {
                         Số điện thoại
                     </label>
                     <input
-                    pattern = '[0-9]*$'
+                        maxLength={20}
+                        pattern="[0-9]*$"
                         type="text"
                         className="form-control"
                         id="phone"
@@ -130,7 +142,7 @@ const FormInput = () => {
                         value={formValue?.email || ""}
                         onChange={handleFormValue()}
                     />
-                        {formError?.email && (
+                    {formError?.email && (
                         <p className="text-danger">{formError?.email}</p>
                     )}
                 </div>
