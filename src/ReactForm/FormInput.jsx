@@ -8,14 +8,14 @@ const FormInput = () => {
     console.log("formValue: ", formValue);
 
     const handleFormValue = () => (ev) => {
-        const { id, value, validity, minLength, maxLength } = ev.target;
+        const { id, name, value, validity, minLength, maxLength } = ev.target;
 
         const { valueMissing, patternMismatch, tooShort } = validity;
 
-        let mess;
+        let mess = "";
 
         if (valueMissing) {
-            mess = `Vui lòng nhập ${id}`;
+            mess = `Vui lòng nhập ${name}`;
         } else if (tooShort) {
             mess = `Vui lòng nhập tối thiểu ${minLength} ký tự`;
         }
@@ -31,17 +31,12 @@ const FormInput = () => {
         //     }
         // }
         else if (patternMismatch) {
-            mess = `Vui lòng nhập đúng định dạng ${id}`;
+            mess = `Vui lòng nhập đúng định dạng ${name}`;
         }
 
         console.log("validity: ", validity);
         // console.log("tooShort: ", validity.tooShort);
         // console.log("tooLong: ", validity.tooLong);
-
-        setFormError({
-            ...formError,
-            [id]: mess,
-        });
 
         setFormValue({
             // ...formValue,
@@ -49,6 +44,11 @@ const FormInput = () => {
 
             ...formValue,
             [id]: value,
+        });
+
+        setFormError({
+            ...formError,
+            [id]: mess,
         });
     };
 
@@ -59,7 +59,8 @@ const FormInput = () => {
                 noValidate
                 onSubmit={(ev) => {
                     ev.preventDefault(); //chặn reload của browser khi submit form
-                    console.log("submit");
+                    let isFlag = false;
+                    for (let key in formError) console.log("submit");
                 }}
             >
                 <h2 className="bg-dark text-white p-2">Thông tin sinh viên</h2>
@@ -72,6 +73,7 @@ const FormInput = () => {
                         minLength={3}
                         maxLength={5}
                         type="text"
+                        name="Mã sinh viên"
                         className="form-control"
                         id="maSV"
                         placeholder="Nhập mã sinh viên"
@@ -96,6 +98,7 @@ const FormInput = () => {
                     <input
                         required
                         pattern="[\p{L} ]+"
+                        name="Họ tên"
                         type="text"
                         className="form-control"
                         id="name"
@@ -115,6 +118,7 @@ const FormInput = () => {
                     <input
                         maxLength={20}
                         pattern="[0-9]*$"
+                        name="số điện thoại"
                         type="text"
                         className="form-control"
                         id="phone"
@@ -134,6 +138,7 @@ const FormInput = () => {
                     <input
                         // validity
                         required
+                        name="Email"
                         pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
                         type="email"
                         className="form-control"
