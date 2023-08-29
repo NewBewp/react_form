@@ -1,16 +1,19 @@
-import React, { Profiler } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react';
+import { store } from './store'
+import { Provider } from 'react-redux';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   //  <React.StrictMode>
-  <Profiler>
+  <Provider store={store}>
     <App />
-  </Profiler>
+  </Provider>
+    
+
 
   //  </React.StrictMode>
 );

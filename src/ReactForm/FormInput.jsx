@@ -1,14 +1,19 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { reactFormActions } from "../store/reactForm/slice";
+
 
 const FormInput = () => {
     //tạo state quản lý các ô input, lấy giá trị các ô input
     const [formValue, setFormValue] = useState();
     const [formError, setFormError] = useState();
-    console.log("formError: ", formError);
-    console.log("formValue: ", formValue);
+    // console.log("formError: ", formError);
+    // console.log("formValue: ", formValue);
 
-    const handleFormValue = () => (ev) => {
-        const { id, name, value, validity, minLength, maxLength } = ev.target;
+    const dispatch = useDispatch()
+
+    const validate = (element) => {
+        const { name, validity, minLength } = element;
 
         const { valueMissing, patternMismatch, tooShort } = validity;
 
@@ -18,25 +23,16 @@ const FormInput = () => {
             mess = `Vui lòng nhập ${name}`;
         } else if (tooShort) {
             mess = `Vui lòng nhập tối thiểu ${minLength} ký tự`;
-        }
-        // else if (patternMismatch) {
-        //     if (id === "name") {
-        //         // Kiểm tra chữ tiếng Việt không có số
-        //         const vietnamesePattern = "/\b[^\d\s]*\p{Script=Vietnamese}+[^\d\s]*\b/gu";
-        //         if (!vietnamesePattern.test(value)) {
-        //             mess = "Vui lòng nhập chữ tiếng Việt không có số";
-        //         }
-        //     } else {
-        //         mess = `Vui lòng nhập đúng định dạng ${id}`;
-        //     }
-        // }
-        else if (patternMismatch) {
+        } else if (patternMismatch) {
             mess = `Vui lòng nhập đúng định dạng ${name}`;
         }
+        return mess;
+    };
 
-        console.log("validity: ", validity);
-        // console.log("tooShort: ", validity.tooShort);
-        // console.log("tooLong: ", validity.tooLong);
+    const handleFormValue = () => (ev) => {
+        const { id, value } = ev.target;
+
+        let mess = validate(ev.target);
 
         setFormValue({
             // ...formValue,
@@ -52,6 +48,8 @@ const FormInput = () => {
         });
     };
 
+    console.log('Render');
+
     return (
         <div className="text-start">
             <form
@@ -59,8 +57,37 @@ const FormInput = () => {
                 noValidate
                 onSubmit={(ev) => {
                     ev.preventDefault(); //chặn reload của browser khi submit form
+
+                    const elements = document.querySelectorAll("input");
+                    // console.log("element: ", elements);
+
+                    let errors = {};
+
+                    elements.forEach((element) => {
+                        const { id } = element;
+
+                        errors[id] = validate(element);
+                    });
+
+                    setFormError(errors);
+
                     let isFlag = false;
-                    for (let key in formError) console.log("submit");
+                    for (let key in errors) {
+                        if (errors[key]) {
+                            // console.log("formError[key]: ", errors[key]);
+                            //nếu xuất hiện báo lỗi ghi đè isFlag đổi giá trị sang 'true'
+                            isFlag = true;
+                            break;
+                        }
+                    }
+                    if (isFlag === true) {
+                        return;
+                    }
+
+                    dispatch(reactFormActions.addStudent(formValue))
+
+                    
+                    console.log("Thêm thành công");
                 }}
             >
                 <h2 className="bg-dark text-white p-2">Thông tin sinh viên</h2>
@@ -139,7 +166,7 @@ const FormInput = () => {
                         // validity
                         required
                         name="Email"
-                        pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                        pattern="[a-zA-Z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
                         type="email"
                         className="form-control"
                         id="email"
