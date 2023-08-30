@@ -9,14 +9,28 @@ const ReactFormSlice = createSlice({
     name: 'ReactForm',
     initialState,
     reducers: {
-        addStudent: (state, { payload }) => {
+        addStudent: (state, actions) => {
             // console.log("payload: ", payload);
-            state.studentList.push(payload)
+            state.studentList.push(actions.payload)
         },
         deleteStudent: (state, { payload }) => {
-            
-            console.log("state.studentList.filter(stu => stu.maSV): ", state.studentList.filter(stu => stu.maSV));
-            state.studentList = state.studentList.filter(stu=>stu.maSV !== payload)
+            // console.log("payload: ", payload);  ///payload chính là id                       
+            state.studentList = state.studentList.filter(stu => stu.maSV !== payload)
+        },
+        editStudent: (state, { payload }) => {
+            state.studentEdit = payload
+        },
+        updateStudent: (state, { payload }) => {
+            // console.log("payload: ", payload);
+            state.studentList = state.studentEdit.map((stu) => {
+                if (stu.maSV === payload.maSV) {
+                    return payload
+                } else {
+                    return stu
+                }
+            })
+
+            state.studentEdit = undefined
         }
     }
 })

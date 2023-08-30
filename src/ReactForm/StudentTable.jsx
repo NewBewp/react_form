@@ -5,9 +5,9 @@ import { ReactFromActions } from "../store/reactForm/slice";
 
 const TableResult = () => {
     const { studentList } = useSelector((state) => state.ReactFormStudent);
-    console.log("studentList: ", studentList);
+    // console.log("studentList: ", studentList);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     return (
         <div className="mt-4">
@@ -46,12 +46,28 @@ const TableResult = () => {
                             <td>{stu?.phone}</td>
                             <td>{stu?.email}</td>
                             <td className="d-flex gap-3">
-                                <button className="btn btn-primary">Edit</button>
-                                <button className="btn btn-danger" 
-                                    onClick={()=>{
-                                        dispatch(ReactFromActions.deleteStudent(stu.maSV))
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                        dispatch(
+                                            ReactFromActions.editStudent(stu)
+                                        );
                                     }}
-                                > Delete</button>
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={() => {
+                                        dispatch(
+                                            ReactFromActions.deleteStudent(
+                                                stu.maSV
+                                            )
+                                        );
+                                    }}
+                                >
+                                    Delete
+                                </button>
                             </td>
                         </tr>
                     ))}

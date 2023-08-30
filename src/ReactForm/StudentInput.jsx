@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ReactFromActions } from "../store/reactForm/slice";
 
-
 const FormInput = () => {
+    const { studentEdit } = useSelector((state) => state.ReactFormStudent);
+    // console.log("studentEdit: ", studentEdit);
+
     //tạo state quản lý các ô input, lấy giá trị các ô input
     const [formValue, setFormValue] = useState();
     const [formError, setFormError] = useState();
@@ -13,7 +15,7 @@ const FormInput = () => {
     const dispatch = useDispatch();
 
     const validate = (element) => {
-        const { name, validity, minLength,value } = element;
+        const { name, validity, minLength, value } = element;
 
         const { valueMissing, patternMismatch, tooShort } = validity;
 
@@ -21,7 +23,7 @@ const FormInput = () => {
 
         if (valueMissing) {
             mess = `Vui lòng nhập ${name}`;
-        } else if (tooShort|| value.length < minLength) {
+        } else if (tooShort || value.length < minLength) {
             mess = `Vui lòng nhập tối thiểu ${minLength} ký tự`;
         } else if (patternMismatch) {
             mess = `Vui lòng nhập đúng định dạng ${name}`;
@@ -48,7 +50,13 @@ const FormInput = () => {
         });
     };
 
-    console.log("Render");
+    useEffect(() => {
+        if (studentEdit) {
+            setFormValue(studentEdit);
+        }
+    }, [studentEdit]);
+
+    // console.log("Render");
 
     return (
         <div className="text-start">
@@ -84,7 +92,11 @@ const FormInput = () => {
                         return;
                     }
 
-                    dispatch(ReactFromActions.addStudent(formValue))
+                    if (!studentEdit) {
+                        dispatch(ReactFromActions.addStudent(formValue));
+                    } else {
+                        dispatch(ReactFromActions.updateStudent(formValue));
+                    }
 
                     console.log("Thêm thành công");
                 }}
@@ -104,6 +116,7 @@ const FormInput = () => {
                         id="maSV"
                         placeholder="Nhập mã sinh viên"
                         value={formValue?.maSV || ""}
+                        // value = {studentEdit?.maSV || ''}
                         // onChange={(ev) => {
                         //     setFormValue({
                         //         ...formValue,
@@ -133,7 +146,6 @@ const FormInput = () => {
                         value={formValue?.name || ""}
                         onChange={handleFormValue()}
                         // autoComplete="off"
-
                     />
                     {formError?.name && (
                         <p className="text-danger">{formError?.name}</p>
@@ -176,15 +188,17 @@ const FormInput = () => {
                         placeholder=""
                         value={formValue?.email || ""}
                         onChange={handleFormValue()}
-                        // autoComplete="off"                        
                     />
                     {formError?.email && (
                         <p className="text-danger">{formError?.email}</p>
                     )}
                 </div>
                 <div className="mt-3 gap-3 d-flex">
-                    <button className="btn btn-success">Thêm sinh viên</button>
-                    <button className="btn btn-primary">Cập nhật</button>
+                    {studentEdit ? (
+                        <button className="btn btn-primary">Cập nhật</button>
+                    ) : (
+                        <button className="btn btn-success">Thêm sinh viên</button>
+                    )}
                 </div>
             </form>
         </div>
