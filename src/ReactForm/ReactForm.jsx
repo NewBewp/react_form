@@ -1,12 +1,12 @@
 import React from "react";
-import FormInput from "./FormInput";
-import TableResult from "./TableResult";
+import StudentInput from "./StudentInput";
+import StudentTable from "./StudentTable";
 
 const ReactForm = () => {
     return (
         <div className="container">
-            <FormInput/>
-            <TableResult/>
+            <StudentInput/>
+            <StudentTable/>
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { reactFormActions } from "../store/reactForm/slice";
+import { ReactFromActions } from "../store/reactForm/slice";
 
 
 const FormInput = () => {
@@ -10,10 +10,10 @@ const FormInput = () => {
     // console.log("formError: ", formError);
     // console.log("formValue: ", formValue);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const validate = (element) => {
-        const { name, validity, minLength } = element;
+        const { name, validity, minLength,value } = element;
 
         const { valueMissing, patternMismatch, tooShort } = validity;
 
@@ -21,7 +21,7 @@ const FormInput = () => {
 
         if (valueMissing) {
             mess = `Vui lòng nhập ${name}`;
-        } else if (tooShort) {
+        } else if (tooShort|| value.length < minLength) {
             mess = `Vui lòng nhập tối thiểu ${minLength} ký tự`;
         } else if (patternMismatch) {
             mess = `Vui lòng nhập đúng định dạng ${name}`;
@@ -48,7 +48,7 @@ const FormInput = () => {
         });
     };
 
-    console.log('Render');
+    console.log("Render");
 
     return (
         <div className="text-start">
@@ -84,9 +84,8 @@ const FormInput = () => {
                         return;
                     }
 
-                    dispatch(reactFormActions.addStudent(formValue))
+                    dispatch(ReactFromActions.addStudent(formValue))
 
-                    
                     console.log("Thêm thành công");
                 }}
             >
@@ -112,6 +111,7 @@ const FormInput = () => {
                         //     });
                         // }}
                         onChange={handleFormValue()}
+                        // autoComplete="off"
                     />
                     {formError?.maSV && (
                         <p className="text-danger">{formError?.maSV}</p>
@@ -132,6 +132,8 @@ const FormInput = () => {
                         placeholder="Nhập họ tên"
                         value={formValue?.name || ""}
                         onChange={handleFormValue()}
+                        // autoComplete="off"
+
                     />
                     {formError?.name && (
                         <p className="text-danger">{formError?.name}</p>
@@ -152,6 +154,7 @@ const FormInput = () => {
                         placeholder="Nhập số điện thoại"
                         value={formValue?.phone || ""}
                         onChange={handleFormValue()}
+                        // autoComplete="off"
                     />
                     {formError?.phone && (
                         <p className="text-danger">{formError?.phone}</p>
@@ -173,13 +176,15 @@ const FormInput = () => {
                         placeholder=""
                         value={formValue?.email || ""}
                         onChange={handleFormValue()}
+                        // autoComplete="off"                        
                     />
                     {formError?.email && (
                         <p className="text-danger">{formError?.email}</p>
                     )}
                 </div>
-                <div className="mt-3">
+                <div className="mt-3 gap-3 d-flex">
                     <button className="btn btn-success">Thêm sinh viên</button>
+                    <button className="btn btn-primary">Cập nhật</button>
                 </div>
             </form>
         </div>

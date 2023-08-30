@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
-import { reactFormReducer } from "./reactForm/slice";
+import { ReactFormReducer } from "./reactForm/slice";
 
 
 export const rootReducer = combineReducers({
-    reactForm: reactFormReducer
+    ReactFormStudent: ReactFormReducer
 })
