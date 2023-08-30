@@ -7,12 +7,12 @@ const TableResult = () => {
     return (
         <div className="mt-4">
             <div className="input-group mb-3">
-                {/* <input
+                <input
                     type="text"
                     className="form-control"
                     placeholder="Tìm kiếm"
                     aria-describedby="button-search"
-                /> */}
+                />
                 <button
                     className="btn btn-outline-secondary"
                     type="button"

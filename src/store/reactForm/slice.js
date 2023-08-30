@@ -6,10 +6,10 @@ const initialState = {
 
 const reactFormSlice = createSlice({
     name: 'reactForm',
-    initialState: initialState,
+    initialState,
     reducers:{
         addStudent: (state,{payload})=>{
-            state.studentList.push(payload)
+        state.studentList.push(payload)
         }
     }
 })
