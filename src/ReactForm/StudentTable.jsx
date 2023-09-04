@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ReactForm from "./ReactForm";
+// import ReactForm from "./ReactForm";
 import { ReactFromActions } from "../store/reactForm/slice";
 
 const TableResult = () => {
     const { studentList } = useSelector((state) => state.ReactFormStudent);
+    const [inputSearch, setInputSearch] = useState();
+
+
+    const filterStudentList = studentList.filter((stu) => {
+        const studentName = stu?.name.toLowerCase();
+        const searchQuery = inputSearch?.toLowerCase();
+
+        return studentName.includes(searchQuery);
+    });
+    // console.log("filterStudentList: ", filterStudentList);
+
     // console.log("studentList: ", studentList);
 
     const dispatch = useDispatch();
@@ -15,16 +26,13 @@ const TableResult = () => {
                 <input
                     type="text"
                     className="form-control"
-                    placeholder="Tìm kiếm"
+                    id="searchByName"
+                    placeholder="Tìm kiếm theo tên"
                     aria-describedby="button-search"
+                    onChange={(e) => {
+                        setInputSearch(e.target.value);
+                    }}
                 />
-                <button
-                    className="btn btn-outline-secondary"
-                    type="button"
-                    id="button-search"
-                >
-                    Search
-                </button>
             </div>
 
             <table className="table text-start">
@@ -39,38 +47,42 @@ const TableResult = () => {
                 </thead>
 
                 <tbody>
-                    {studentList.map((stu) => (
-                        <tr key={stu?.maSV}>
-                            <th>{stu?.maSV}</th>
-                            <td>{stu?.name}</td>
-                            <td>{stu?.phone}</td>
-                            <td>{stu?.email}</td>
-                            <td className="d-flex gap-3">
-                                <button
-                                    className="btn btn-primary"
-                                    onClick={() => {
-                                        dispatch(
-                                            ReactFromActions.editStudent(stu)
-                                        );
-                                    }}
-                                >
-                                    Edit
-                                </button>
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={() => {
-                                        dispatch(
-                                            ReactFromActions.deleteStudent(
-                                                stu.maSV
-                                            )
-                                        );
-                                    }}
-                                >
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
+                    {(inputSearch ? filterStudentList : studentList).map(
+                        (stu) => (
+                            <tr key={stu?.maSV}>
+                                <th>{stu?.maSV}</th>
+                                <td>{stu?.name}</td>
+                                <td>{stu?.phone}</td>
+                                <td>{stu?.email}</td>
+                                <td className="d-flex gap-3">
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() => {
+                                            dispatch(
+                                                ReactFromActions.editStudent(
+                                                    stu
+                                                )
+                                            );
+                                        }}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => {
+                                            dispatch(
+                                                ReactFromActions.deleteStudent(
+                                                    stu.maSV
+                                                )
+                                            );
+                                        }}
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        )
+                    )}
                 </tbody>
             </table>
         </div>

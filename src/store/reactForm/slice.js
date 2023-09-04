@@ -22,7 +22,7 @@ const ReactFormSlice = createSlice({
         },
         updateStudent: (state, { payload }) => {
             // console.log("payload: ", payload);
-            state.studentList = state.studentEdit.map((stu) => {
+            state.studentList = state.studentList.map((stu) => {
                 if (stu.maSV === payload.maSV) {
                     return payload
                 } else {
